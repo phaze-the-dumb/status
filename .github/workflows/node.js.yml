@@ -6,8 +6,6 @@ name: Status Updater
 on:
   schedule:
     - cron: "*/30 * * * *"
-  push:
-    branches: [main]
 
 jobs:
   build:

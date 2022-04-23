@@ -10,7 +10,7 @@ const sites = require('./info/sites.json');
 
 console.log('Script Started');
 
-let testSite = ( site ) => {
+let testSite = ( site, done ) => {
     console.log('Fetching '+site.name);
 
     fetch(site.url).then(data => {
@@ -33,6 +33,7 @@ let testSite = ( site ) => {
         console.log('Updated JSON File');
 
         updateFile(JSON.stringify(status))
+        done()
     }).catch(e => {
         console.log('Fetch Error: '+e);
 
@@ -53,6 +54,7 @@ let testSite = ( site ) => {
         console.log('Updated JSON File');
 
         updateFile(JSON.stringify(status))
+        done()
     })
 }
 
@@ -71,4 +73,12 @@ let updateFile = async ( data ) => {
     console.log('Pushed to GitHub')
 }
 
-testSite(sites[0])
+let runSiteTest = ( i ) => {
+    testSite(sites[i], () => {
+        if(sites[i + 1]){
+            runSiteTest(i + 1);
+        }
+    })
+}
+
+runSiteTest(0)
