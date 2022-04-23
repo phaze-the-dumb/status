@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@octokit/core": "^3.6.0",
+    "dotenv": "^16.0.0",
     "node-fetch": "^2.6.7"
   }
 }

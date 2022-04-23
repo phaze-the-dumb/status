@@ -1,5 +1,9 @@
 const fetch = require('node-fetch');
+const octokit = require('@octokit/core');
 const fs = require('fs');
+require('dotenv').config();
+
+const client = new octokit.Octokit({ auth: process.env.GH_TOKEN });
 
 const status = require('./info/status.json');
 const sites = require('./info/sites.json');
@@ -28,7 +32,7 @@ let testSite = ( site ) => {
         fs.writeFileSync('info/status.json', JSON.stringify(status))
         console.log('Updated JSON File');
 
-        data.text().then(text => console.log(text))
+        updateFile(JSON.stringify(status))
     }).catch(e => {
         console.log('Fetch Error: '+e);
 
@@ -47,7 +51,24 @@ let testSite = ( site ) => {
 
         fs.writeFileSync('info/status.json', JSON.stringify(status))
         console.log('Updated JSON File');
+
+        updateFile(JSON.stringify(status))
     })
+}
+
+let updateFile = async ( data ) => {
+    console.log('Pushing to GitHub');
+
+    let d = await client.request('GET /repos/wiresboy-exe/status/contents/info/status.json');
+    await client.request('PUT /repos/wiresboy-exe/status/contents/info/status.json', {
+        path: 'info/status.json',
+        message: 'Website Update: '+Date.now(),
+        content: Buffer.from(data, 'utf-8').toString(d.data.encoding),
+        sha: d.data.sha,
+        branch: 'main'
+    })
+
+    console.log('Pushed to GitHub')
 }
 
 testSite(sites[0])
