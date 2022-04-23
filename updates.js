@@ -4,8 +4,14 @@ const fs = require('fs');
 const status = require('./info/status.json');
 const sites = require('./info/sites.json');
 
+console.log('Script Started');
+
 let testSite = ( site ) => {
+    console.log('Fetching '+site.name);
+
     fetch(site.url).then(data => {
+        console.log('Response With Code: '+data.status);
+
         let statusres = {
             online: data.status === 200,
             code: data.status,
@@ -18,8 +24,12 @@ let testSite = ( site ) => {
         }
 
         status[site.name].push(statusres)
+        
         fs.writeFileSync('info/status.json', JSON.stringify(status))
+        console.log('Updated JSON File');
     }).catch(e => {
+        console.log('Fetch Error: '+e);
+
         let statusres = {
             online: false,
             code: 000,
@@ -32,7 +42,9 @@ let testSite = ( site ) => {
         }
 
         status[site.name].push(statusres)
+
         fs.writeFileSync('info/status.json', JSON.stringify(status))
+        console.log('Updated JSON File');
     })
 }
 
