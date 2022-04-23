@@ -26,7 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        file-path: path/to/file
+        file-path: info/*.json
         commit-msg: Update resources
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - run: npm ci
