@@ -10,6 +10,12 @@ const sites = require('./info/sites.json');
 
 console.log('Script Started');
 
+Object.keys(status).forEach(key => {
+    if(status[key].length > 10){
+        status[key].shift()
+    }
+})
+
 let testSite = ( site, done ) => {
     console.log('Fetching '+site.name);
 
