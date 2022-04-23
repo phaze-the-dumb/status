@@ -24,9 +24,11 @@ let testSite = ( site ) => {
         }
 
         status[site.name].push(statusres)
-        
+
         fs.writeFileSync('info/status.json', JSON.stringify(status))
         console.log('Updated JSON File');
+
+        data.text().then(text => console.log(text))
     }).catch(e => {
         console.log('Fetch Error: '+e);
 
