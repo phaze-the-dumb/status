@@ -84,6 +84,15 @@
                 margin-right: 2px;
                 background: #aa0000;
             }
+
+            #infoDiv{
+                display: none;
+                position: fixed;
+                transform: translate(-50%, 0);
+                background: white;
+                border-radius: 5px;
+                padding: 0px 15px;
+            }
         </style>
     </head>
     <body>
@@ -101,9 +110,26 @@
             
         </div>
 
+        <div id="infoDiv">helo</div>
+
         <script>
             let banner = document.querySelector('.banner');
             let sticker = document.querySelector('.sticker');
+            let infoDiv = document.querySelector('#infoDiv');
+            let months = [
+                'January',
+                'Febuary',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ]
 
             sticker.onload = () => {
                 sticker.style.top = banner.clientHeight - sticker.clientHeight + 'px';
@@ -113,13 +139,44 @@
                 sticker.style.top = banner.clientHeight - sticker.clientHeight + 'px';
             }
 
+            let isStillMoving = false;
+            let isMouseOverElement = false;
+            window.onmousemove = ( e ) => {
+                setTimeout(() => {
+                    if(!isMouseOverElement){
+                        if(!isStillMoving){
+                            infoDiv.style.display = 'none';
+                        }
+                    } else{
+                        isMouseOverElement = false;
+                    }
+                }, 10)
+
+                infoDiv.style.left = e.clientX;
+                infoDiv.style.top = e.clientY + 10;
+            }
+
+            let info = ( text ) => {
+                isStillMoving = true;
+                isMouseOverElement = true;
+                infoDiv.innerHTML = text;
+                infoDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    isStillMoving = false;
+                }, 20)
+            }
+
             fetch('https://raw.githubusercontent.com/wiresboy-exe/status/main/info/sites.json').then(data => data.json()).then(data => {
                 fetch('https://raw.githubusercontent.com/wiresboy-exe/status/main/info/status.json').then(data => data.json()).then(status => {
+                    let isAllWorking = true;
+
                     data.forEach((site, i) => {
                         let statusData = status[site.name];
 
                         let containerDiv = document.createElement('div');
                         containerDiv.classList.add('infoBox');
+                        containerDiv.innerHTML += site.name + '<br /><br />'
 
                         if(i === 0)
                             containerDiv.classList.add('topBox');
@@ -132,14 +189,26 @@
 
                         statusData.forEach(st => {
                             let up = document.createElement('div');
+                            let date = new Date(st.timestamp);
 
                             if(st.online){
                                 up.classList.add('okUptime')
+                                up.onmousemove = () => {
+                                    info('<h3>' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + '</h3> Service Operational')
+                                }
                             } else{
+                                isAllWorking = false;
+
                                 if(st.code === 000){
                                     up.classList.add('errorUptime')
+                                    up.onmousemove = () => {
+                                        info('<h3>' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + '</h3> Service Errors')
+                                    }
                                 } else{
                                     up.classList.add('warnUptime')
+                                    up.onmousemove = () => {
+                                        info('<h3>' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear() + '</h3> Service Errors: '+st.code+' '+st.text)
+                                    }
                                 }
                             }
 
@@ -149,6 +218,11 @@
                         containerDiv.appendChild(uptimec);
                         document.querySelector('.moreInfo').appendChild(containerDiv);
                     })
+
+                    if(!isAllWorking){
+                        document.querySelector('.mainStatusBar').innerHTML = 'Some Service Errors';
+                        document.querySelector('.mainStatusBar').style.background = '#aa0000';
+                    }
                 })
             })
         </script>
