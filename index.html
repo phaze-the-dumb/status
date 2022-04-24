@@ -113,8 +113,8 @@
                 sticker.style.top = banner.clientHeight - sticker.clientHeight + 'px';
             }
 
-            fetch('/info/sites.json').then(data => data.json()).then(data => {
-                fetch('/info/status.json').then(data => data.json()).then(status => {
+            fetch('https://raw.githubusercontent.com/wiresboy-exe/status/main/info/sites.json').then(data => data.json()).then(data => {
+                fetch('https://raw.githubusercontent.com/wiresboy-exe/status/main/info/status.json').then(data => data.json()).then(status => {
                     data.forEach((site, i) => {
                         let statusData = status[site.name];
 
