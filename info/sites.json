@@ -6,5 +6,9 @@
     {
         "name": "Proxy Server",
         "url": "https://dns.phazed.xyz"
+    },
+    {
+        "name": "File Sea (webstatic-sea.phazed.xyz)",
+        "url": "https://webstatic-sea.phazed.xyz"
     }
 ]
