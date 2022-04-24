@@ -1,1 +1,156 @@
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&family=Kanit:wght@100&family=Raleway:wght@100&family=Yanone+Kaffeesatz:wght@300&display=swap');
 
+            body{
+                font-family: 'Kanit', sans-serif;
+                font-family: 'Raleway', sans-serif;
+
+                margin: 0;
+            }
+
+            h1{
+                margin: 0;
+                font-family: 'Yanone Kaffeesatz', sans-serif;
+            }
+
+            .banner{
+                text-align: center;
+                background: #00ccff;
+                padding: 100px;
+                font-size: 25px;
+            }
+
+            .sticker{
+                position: absolute;
+                right: 25px;
+            }
+
+            .mainStatusBar{
+                margin: 5% 20%;
+                background: #00aa00;
+                color: white;
+                text-align: left;
+                padding: 20px;
+                border-radius: 10px;
+                font-family: 'Fira Sans', sans-serif;
+            }
+
+            .moreInfo{
+                margin: 5% 15%;
+                border-radius: 10px;
+                border: gray 1px solid;
+            }
+
+            .infoBox{
+                border: gray 1px solid;
+                padding: 20px;
+            }
+
+            .topBox{
+                border-radius: 10px 10px 0 0;
+            }
+
+            .bottomBox{
+                border-radius: 0 0 10px 10px;
+            }
+            
+            .uptimeContainer{
+                height: 45px;
+                display: flex;
+            }
+
+            .okUptime{
+                width: 100%;
+                height: 45px;
+                margin-left: 2px;
+                margin-right: 2px;
+                background: #00aa00;
+            }
+
+            .warnUptime{
+                width: 100%;
+                height: 45px;
+                margin-left: 2px;
+                margin-right: 2px;
+                background: #dfd000;
+            }
+
+            .errorUptime{
+                width: 100%;
+                height: 45px;
+                margin-left: 2px;
+                margin-right: 2px;
+                background: #aa0000;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="banner">
+            <h1>Phaze Status</h1>
+
+            <img src="https://webstatic-sea.phazed.xyz/cdn/rimirusticker.png" class="sticker" draggable="false">
+        </div>
+
+        <div class="mainStatusBar">
+            All Services Operational
+        </div>
+
+        <div class="moreInfo">
+            
+        </div>
+
+        <script>
+            let banner = document.querySelector('.banner');
+            let sticker = document.querySelector('.sticker');
+
+            sticker.onload = () => {
+                sticker.style.top = banner.clientHeight - sticker.clientHeight + 'px';
+            }
+
+            window.onresize = () => {
+                sticker.style.top = banner.clientHeight - sticker.clientHeight + 'px';
+            }
+
+            fetch('/info/sites.json').then(data => data.json()).then(data => {
+                fetch('/info/status.json').then(data => data.json()).then(status => {
+                    data.forEach((site, i) => {
+                        let statusData = status[site.name];
+
+                        let containerDiv = document.createElement('div');
+                        containerDiv.classList.add('infoBox');
+
+                        if(i === 0)
+                            containerDiv.classList.add('topBox');
+
+                        if(i === data.length - 1)
+                            containerDiv.classList.add('bottomBox');
+
+                        let uptimec = document.createElement('div');
+                        uptimec.classList.add('uptimeContainer');
+
+                        statusData.forEach(st => {
+                            let up = document.createElement('div');
+
+                            if(st.online){
+                                up.classList.add('okUptime')
+                            } else{
+                                if(st.code === 000){
+                                    up.classList.add('errorUptime')
+                                } else{
+                                    up.classList.add('warnUptime')
+                                }
+                            }
+
+                            uptimec.appendChild(up);
+                        })
+
+                        containerDiv.appendChild(uptimec);
+                        document.querySelector('.moreInfo').appendChild(containerDiv);
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>
