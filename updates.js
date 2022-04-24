@@ -38,7 +38,6 @@ let testSite = ( site, done ) => {
         fs.writeFileSync('info/status.json', JSON.stringify(status))
         console.log('Updated JSON File');
 
-        updateFile(JSON.stringify(status))
         done()
     }).catch(e => {
         console.log('Fetch Error: '+e);
@@ -59,7 +58,6 @@ let testSite = ( site, done ) => {
         fs.writeFileSync('info/status.json', JSON.stringify(status))
         console.log('Updated JSON File');
 
-        updateFile(JSON.stringify(status))
         done()
     })
 }
@@ -83,6 +81,8 @@ let runSiteTest = ( i ) => {
     testSite(sites[i], () => {
         if(sites[i + 1]){
             runSiteTest(i + 1);
+        } else{
+            updateFile(JSON.stringify(status))
         }
     })
 }
