@@ -10,5 +10,17 @@
     {
         "name": "File Sea (webstatic-sea.phazed.xyz)",
         "url": "https://webstatic-sea.phazed.xyz"
+    },
+    {
+        "name": "UK National Grid Monitor (grid.phazed.xyz)",
+        "url": "https://grid.phazed.xyz/"
+    },
+    {
+        "name": "Cynosure Home (c.phazed.xyz)",
+        "url": "https://c.phazed.xyz"
+    },
+    {
+        "name": "The Dream Project (thedreamproject.xyz)",
+        "url": "https://thedreamproject.xyz"
     }
 ]
