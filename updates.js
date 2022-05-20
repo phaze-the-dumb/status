@@ -11,7 +11,7 @@ const sites = require('./info/sites.json');
 console.log('Script Started');
 
 Object.keys(status).forEach(key => {
-    if(status[key].length > 250){
+    if(status[key].length > 100){
         status[key].shift()
     }
 })
